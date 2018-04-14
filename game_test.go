@@ -2,6 +2,7 @@ package mana_test
 
 import (
 	"testing"
+	"time"
 
 	mana "github.com/kori-irrlicht/mana-engine"
 	. "github.com/smartystreets/goconvey/convey"
@@ -21,7 +22,7 @@ func (g *testGame) Update() {
 	g.updateCount++
 	g.updateBeforeRender = !g.render
 }
-func (g *testGame) Render() {
+func (g *testGame) Render(float32) {
 	g.render = true
 	g.renderCount++
 }
@@ -33,6 +34,13 @@ func TestGame(t *testing.T) {
 	Convey("Given a new Game", t, func() {
 		g := &testGame{}
 		g.running = make(chan bool, 5)
+		mana.TargetTimePerFrame = 16 * time.Millisecond
+		timeNow := time.Now()
+
+		mana.Timer = func() time.Time {
+			timeNow = timeNow.Add(16 * time.Millisecond)
+			return timeNow
+		}
 		Convey("Running it", func() {
 			g.running <- true
 			g.running <- false
@@ -68,6 +76,47 @@ func TestGame(t *testing.T) {
 			Convey("Render is called twice", func() {
 				So(g.renderCount, ShouldEqual, 2)
 			})
+		})
+
+		Convey("Setting the update time to 16ms and running for 40ms", func() {
+			g.running <- true
+			g.running <- false
+			timeNow := time.Now()
+
+			mana.Timer = func() time.Time {
+				timeNow = timeNow.Add(40 * time.Millisecond)
+				return timeNow
+			}
+			mana.Run(g)
+
+			Convey("Update is called twice", func() {
+				So(g.updateCount, ShouldEqual, 2)
+
+			})
+			Convey("Render is called once", func() {
+				So(g.renderCount, ShouldEqual, 1)
+			})
+
+		})
+		Convey("Setting the update time to 16ms and running for 10ms", func() {
+			g.running <- true
+			g.running <- false
+			timeNow := time.Now()
+
+			mana.Timer = func() time.Time {
+				timeNow = timeNow.Add(10 * time.Millisecond)
+				return timeNow
+			}
+			mana.Run(g)
+
+			Convey("Update is never called", func() {
+				So(g.updateCount, ShouldEqual, 0)
+
+			})
+			Convey("Render is called once", func() {
+				So(g.renderCount, ShouldEqual, 1)
+			})
+
 		})
 	})
 }
