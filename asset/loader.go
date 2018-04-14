@@ -60,7 +60,7 @@ func NewHolder(loader Loader) Holder {
 
 func (l *holder) Load(name, file string, args map[string]string) (interface{}, error) {
 	if _, ok := l.assets[name]; ok {
-		err := fmt.Errorf("Font already exists")
+		err := fmt.Errorf("Asset with name '%s' already exists", name)
 		return nil, err
 	}
 
@@ -88,12 +88,12 @@ func (l *holder) Ready() bool {
 }
 
 func (l *holder) Error() chan error {
-	return l.Error()
+	return l.errors
 }
 
 func (l *holder) Get(name string) (interface{}, error) {
 	if f, ok := l.assets[name]; !ok {
-		err := fmt.Errorf("Assets with name '%s' does not exist", name)
+		err := fmt.Errorf("Asset with name '%s' does not exist", name)
 		return nil, err
 	} else {
 		return f, nil
