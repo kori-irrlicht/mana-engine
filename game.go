@@ -11,6 +11,8 @@ import (
 // Overwrite this, if you want your game to run with an different frame rate
 var TargetTimePerFrame = 1 * time.Second / 60
 
+// The function used to get the current time in the gameloop
+// Defaults to time.Now and normally does not need to be changed
 var Timer = time.Now
 
 type Game interface {
@@ -19,6 +21,8 @@ type Game interface {
 	Running() bool
 }
 
+// Run starts the gameloop
+// It only returns when game.Running() is false
 func Run(game Game) {
 
 	lastTime := Timer()
