@@ -1,8 +1,9 @@
-package mana
+package mana_test
 
 import (
 	"testing"
 
+	mana "github.com/kori-irrlicht/mana-engine"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -35,7 +36,7 @@ func TestGame(t *testing.T) {
 		Convey("Running it", func() {
 			g.running <- true
 			g.running <- false
-			Run(g)
+			mana.Run(g)
 			Convey("Update is called", func() {
 				So(g.update, ShouldBeTrue)
 			})
@@ -48,7 +49,7 @@ func TestGame(t *testing.T) {
 		})
 		Convey("If game is not running", func() {
 			g.running <- false
-			Run(g)
+			mana.Run(g)
 			Convey("Update is not called", func() {
 				So(g.update, ShouldBeFalse)
 			})
@@ -60,7 +61,7 @@ func TestGame(t *testing.T) {
 			g.running <- true
 			g.running <- true
 			g.running <- false
-			Run(g)
+			mana.Run(g)
 			Convey("Update is called twice", func() {
 				So(g.updateCount, ShouldEqual, 2)
 			})
