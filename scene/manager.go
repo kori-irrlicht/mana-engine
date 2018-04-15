@@ -5,17 +5,20 @@ import "fmt"
 type Manager interface {
 	Scene
 
-	// Current returns the current scene
+	// Current returns the current scene.
+	// Returns an error if there is no current scene
 	Current() (Scene, error)
 
-	// Register adds a new scene to the manager
+	// Register adds a new scene to the manager.
 	// Returns an error, if the name already exists
 	Register(Name, Scene) error
 
-	// Next requests the manager to transition to the scene with the given name
+	// Next requests the manager to transition to the scene with the given name.
 	// Returns the scene or an error, if the scene does not exist
 	Next(Name) (Scene, error)
 
+	// StartWith sets the initial scene to the given name.
+	// Returns an error if the name is not registered
 	StartWith(Name) error
 }
 
