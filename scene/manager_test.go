@@ -7,14 +7,26 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-type testScene struct{}
+type testScene struct {
+	input       bool
+	update      bool
+	render      bool
+	renderDelta float32
+}
 
-func (s *testScene) Entry()         {}
-func (s *testScene) Exit()          {}
-func (s *testScene) Input()         {}
-func (s *testScene) Update()        {}
-func (s *testScene) Render(float32) {}
-func (s *testScene) Ready() bool    { return false }
+func (s *testScene) Entry() {}
+func (s *testScene) Exit()  {}
+func (s *testScene) Input() {
+	s.input = true
+}
+func (s *testScene) Update() {
+	s.update = true
+}
+func (s *testScene) Render(f float32) {
+	s.render = true
+	s.renderDelta = f
+}
+func (s *testScene) Ready() bool { return false }
 
 func TestDefaultManager(t *testing.T) {
 	Convey("A new manager", t, func() {
@@ -43,6 +55,22 @@ func TestDefaultManager(t *testing.T) {
 					s, err := m.Current()
 					So(s, ShouldEqual, ts)
 					So(err, ShouldBeNil)
+					Convey("Input is passed to the current scene", func() {
+						s := s.(*testScene)
+						m.Input()
+						So(s.input, ShouldBeTrue)
+					})
+					Convey("Update is passed to the current scene", func() {
+						s := s.(*testScene)
+						m.Update()
+						So(s.update, ShouldBeTrue)
+					})
+					Convey("Render is passed to the current scene", func() {
+						s := s.(*testScene)
+						m.Render(14)
+						So(s.render, ShouldBeTrue)
+						So(s.renderDelta, ShouldEqual, 14)
+					})
 				})
 
 			})
