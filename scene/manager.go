@@ -54,6 +54,9 @@ func (d *defaultManager) Register(name Name, scene Scene) error {
 }
 func (d *defaultManager) Ready() bool { return true }
 func (d *defaultManager) StartWith(name Name) error {
+	if _, ok := d.scenes[name]; !ok {
+		return fmt.Errorf("No scene with name '%s'", name)
+	}
 	d.current = name
 	return nil
 }

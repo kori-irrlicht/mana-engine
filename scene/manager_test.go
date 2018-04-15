@@ -53,5 +53,13 @@ func TestDefaultManager(t *testing.T) {
 			So(err, ShouldNotBeNil)
 			So(err.Error(), ShouldEqual, fmt.Errorf("No current scene").Error())
 		})
+		Convey("Selecting an unknown start scene", func() {
+			err := m.StartWith("name")
+			Convey("StartWith should return an error", func() {
+				So(err, ShouldNotBeNil)
+				So(err.Error(), ShouldEqual, fmt.Errorf("No scene with name 'name'").Error())
+
+			})
+		})
 	})
 }
