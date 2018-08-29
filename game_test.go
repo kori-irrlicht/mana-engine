@@ -9,12 +9,22 @@ import (
 )
 
 type testGame struct {
+	input              bool
 	update             bool
 	render             bool
+	inputBeforeUpdate  bool
 	updateBeforeRender bool
 	running            chan bool
 	renderCount        int
 	updateCount        int
+	inputCount         int
+}
+
+func (g *testGame) Input() {
+
+	g.input = true
+	g.inputCount++
+	g.inputBeforeUpdate = !g.update
 }
 
 func (g *testGame) Update() {
@@ -45,6 +55,9 @@ func TestGame(t *testing.T) {
 			g.running <- true
 			g.running <- false
 			mana.Run(g)
+			Convey("Input is called", func() {
+				So(g.input, ShouldBeTrue)
+			})
 			Convey("Update is called", func() {
 				So(g.update, ShouldBeTrue)
 			})
@@ -58,6 +71,9 @@ func TestGame(t *testing.T) {
 		Convey("If game is not running", func() {
 			g.running <- false
 			mana.Run(g)
+			Convey("Input is not called", func() {
+				So(g.input, ShouldBeFalse)
+			})
 			Convey("Update is not called", func() {
 				So(g.update, ShouldBeFalse)
 			})
@@ -70,6 +86,9 @@ func TestGame(t *testing.T) {
 			g.running <- true
 			g.running <- false
 			mana.Run(g)
+			Convey("Input is called twice", func() {
+				So(g.inputCount, ShouldEqual, 2)
+			})
 			Convey("Update is called twice", func() {
 				So(g.updateCount, ShouldEqual, 2)
 			})
@@ -88,6 +107,9 @@ func TestGame(t *testing.T) {
 				return timeNow
 			}
 			mana.Run(g)
+			Convey("Input is called once", func() {
+				So(g.inputCount, ShouldEqual, 1)
+			})
 
 			Convey("Update is called twice", func() {
 				So(g.updateCount, ShouldEqual, 2)
@@ -109,6 +131,9 @@ func TestGame(t *testing.T) {
 			}
 			mana.Run(g)
 
+			Convey("Input is called once", func() {
+				So(g.inputCount, ShouldEqual, 1)
+			})
 			Convey("Update is never called", func() {
 				So(g.updateCount, ShouldEqual, 0)
 

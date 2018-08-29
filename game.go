@@ -16,6 +16,7 @@ var TargetTimePerFrame = 1 * time.Second / 60
 var Timer = time.Now
 
 type Game interface {
+	Input()
 	Update()
 	Render(float32)
 	Running() bool
@@ -34,6 +35,7 @@ func Run(game Game) {
 		diff = current.Sub(lastTime)
 		lastTime = current
 		lag += diff
+		game.Input()
 		for lag >= TargetTimePerFrame {
 			game.Update()
 			lag -= TargetTimePerFrame
