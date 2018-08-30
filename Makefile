@@ -8,5 +8,9 @@ test:
 install:
 	go get -t ./...
 
+devinstall:
+	go get -u golang.org/x/lint/golint
+	go get -u gopkg.in/alecthomas/gometalinter.v2
+
 clean:
 	rm *.out
