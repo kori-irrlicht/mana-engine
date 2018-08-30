@@ -7,4 +7,5 @@ addons:
     organization: "kori-irrlicht-github"
 script:
   # other script steps might be done before running the actual analysis
+  - make
   - sonar-scanner
