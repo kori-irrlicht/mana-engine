@@ -7,11 +7,16 @@ import (
 )
 
 type testController struct {
-	down Key
+	down    Key
+	updated bool
 }
 
 func (tc testController) IsDown(i Key) bool {
 	return tc.down == i
+}
+
+func (tc *testController) Update() {
+	tc.updated = true
 }
 
 // Enforce interface implementation
@@ -62,6 +67,12 @@ func TestLogger(t *testing.T) {
 			Convey("MultiplexController has key 1 up", func() {
 				So(mc.IsDown(testKey1), ShouldBeFalse)
 			})
+		})
+
+		Convey("Update MultiplexController updates subcontroller", func() {
+			mc.Update()
+			So(t1.updated, ShouldBeTrue)
+			So(t2.updated, ShouldBeTrue)
 		})
 	})
 }
