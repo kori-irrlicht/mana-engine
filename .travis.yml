@@ -5,7 +5,9 @@ go:
 addons:
   sonarcloud:
     organization: "kori-irrlicht-github"
+install:
+  - make install
 script:
   # other script steps might be done before running the actual analysis
-  - make
+  - make test
   - sonar-scanner
