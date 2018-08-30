@@ -11,6 +11,7 @@ install:
 devinstall:
 	go get -u golang.org/x/lint/golint
 	go get -u gopkg.in/alecthomas/gometalinter.v2
+	gometalinter.v2 --install
 
 clean:
 	rm *.out
