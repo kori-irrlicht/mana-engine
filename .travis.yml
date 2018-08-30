@@ -2,3 +2,9 @@ language: go
 go:
     - "1.10.x"
     - master
+addons:
+  sonarcloud:
+    organization: "kori-irrlicht-github"
+script:
+  # other script steps might be done before running the actual analysis
+  - sonar-scanner
