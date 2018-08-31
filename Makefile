@@ -2,7 +2,6 @@
 test:
 	go test -json -coverprofile=coverage.out ./... > test-report.out
 	go vet ./... > vet.out
-	golint ./... > lint.out
 	
 	# Ignore error, because gometalinter returns not 0 if it finds something in the code
 	-gometalinter.v2 ./... > metalint.out
