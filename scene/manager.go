@@ -2,6 +2,7 @@ package scene
 
 import "fmt"
 
+// Manager contains the scenes of the game
 type Manager interface {
 	Scene
 

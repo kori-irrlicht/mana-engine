@@ -1,7 +1,9 @@
 package scene
 
+// Name is an identifier for a Scene
 type Name string
 
+// Scene is a part of the game, like a main menu, option, loading screen or the ingame
 type Scene interface {
 	// Input handles the player input
 	Input()

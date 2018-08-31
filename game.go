@@ -4,14 +4,14 @@ import (
 	"time"
 )
 
-// Defines how often Game.Update() is called by Run.
+// TargetTimePerFrame defines how often Game.Update() is called by Run.
 // Defaults to a target time of 16666666ns, which is means
 // Update is called around 60 times per second => 60 FPS
 //
 // Overwrite this, if you want your game to run with an different frame rate
 var TargetTimePerFrame = 1 * time.Second / 60
 
-// The function used to get the current time in the gameloop
+// Timer is the function used to get the current time in the gameloop
 // Defaults to time.Now and normally does not need to be changed
 var Timer = time.Now
 
@@ -28,7 +28,7 @@ func Run(game Game) {
 
 	lastTime := Timer()
 	lag := 0 * time.Millisecond
-	diff := 0 * time.Millisecond
+	var diff time.Duration
 	for game.Running() {
 
 		current := Timer()

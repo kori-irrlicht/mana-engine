@@ -1,15 +1,11 @@
-// Copyright 2018 kori-irrlicht
 package asset
 
 import (
 	"fmt"
 )
 
+// FileType is used to specify which kind of asset a Holder or Loader works on
 type FileType uint
-
-const (
-	TypeTrueTypeFont = iota
-)
 
 // Holder loads assets with a given loader and stores them
 type Holder interface {
@@ -88,14 +84,15 @@ func (l *holder) Error() chan error {
 }
 
 func (l *holder) Get(name string) (interface{}, error) {
-	if f, ok := l.assets[name]; !ok {
+	f, ok := l.assets[name]
+	if !ok {
 		err := fmt.Errorf("Asset with name '%s' does not exist", name)
 		return nil, err
-	} else {
-		return f, nil
 	}
+	return f, nil
 }
 
+// Loader are responsible to load assets
 type Loader interface {
 	// Load loads the given file using the extra arguments(e.g. the fontsize for a fontloader)
 	// and saves it internal with the given name.
