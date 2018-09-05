@@ -4,7 +4,7 @@ import "fmt"
 
 // Manager contains the scenes of the game
 type Manager interface {
-	Scene
+	Managable
 
 	// Current returns the current scene.
 	// Returns an error if there is no current scene
@@ -24,7 +24,6 @@ type Manager interface {
 }
 
 type defaultManager struct {
-	Loading Scene
 	scenes  map[Name]Scene
 	current Name
 }
@@ -44,8 +43,6 @@ func (d *defaultManager) Current() (Scene, error) {
 	}
 	return nil, fmt.Errorf("No current scene")
 }
-func (d *defaultManager) Entry() {}
-func (d *defaultManager) Exit()  {}
 func (d *defaultManager) Input() {
 	s, _ := d.Current()
 	s.Input()
@@ -75,7 +72,6 @@ func (d *defaultManager) Register(name Name, scene Scene) error {
 	d.scenes[name] = scene
 	return nil
 }
-func (d *defaultManager) Ready() bool { return true }
 func (d *defaultManager) StartWith(name Name) error {
 	if _, ok := d.scenes[name]; !ok {
 		return fmt.Errorf("No scene with name '%s'", name)
