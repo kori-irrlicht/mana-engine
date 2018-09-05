@@ -78,10 +78,9 @@ func (d *defaultManager) Next(name Name) (Scene, error) {
 
 	d.current = name
 
-	curr, err = d.Current()
-	if err != nil {
-		panic("No current scene")
-	}
+	// Current() only returns an error, if there is no current scene, but
+	// since we set a current scene just now, there can't be an error
+	curr, _ = d.Current()
 	curr.Entry()
 	return s, nil
 }

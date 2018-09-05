@@ -82,6 +82,9 @@ func TestDefaultManager(t *testing.T) {
 			})
 		})
 		Convey("no current scene", func() {
+			var n1 Name = "s1"
+			ts := &testScene{}
+			m.Register(n1, ts)
 			s, err := m.Current()
 			So(s, ShouldBeNil)
 			So(err, ShouldNotBeNil)
@@ -94,6 +97,10 @@ func TestDefaultManager(t *testing.T) {
 			})
 			Convey("Render should panic", func() {
 				So(func() { m.Render(1) }, ShouldPanicWith, "No current scene")
+			})
+			Convey("Next should panic", func() {
+
+				So(func() { m.Next(n1) }, ShouldPanicWith, "No current scene")
 			})
 		})
 		Convey("Selecting an unknown start scene", func() {
