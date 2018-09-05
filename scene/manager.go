@@ -58,7 +58,16 @@ func (d *defaultManager) Render(delta float32) {
 	s, _ := d.Current()
 	s.Render(delta)
 }
-func (d *defaultManager) Next(Name) (Scene, error) { return nil, nil }
+
+func (d *defaultManager) Next(name Name) (Scene, error) {
+	s, ok := d.scenes[name]
+	if !ok {
+		return nil, fmt.Errorf("No scene with name '%s'", name)
+	}
+	d.current = name
+	return s, nil
+}
+
 func (d *defaultManager) Register(name Name, scene Scene) error {
 	if _, ok := d.scenes[name]; ok {
 		return fmt.Errorf("Scene with name '%s' already registered", name)

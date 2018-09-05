@@ -89,5 +89,30 @@ func TestDefaultManager(t *testing.T) {
 
 			})
 		})
+		Convey("Registering multiple scenes", func() {
+			var n1 Name = "s1"
+			var n2 Name = "s2"
+			ts := &testScene{}
+			ts2 := &testScene{}
+			m.Register(n1, ts)
+			m.Register(n2, ts2)
+			m.StartWith(n1)
+			Convey("Switching to the second scene", func() {
+				s, err := m.Next(n2)
+				So(s, ShouldEqual, ts2)
+				So(err, ShouldBeNil)
+				Convey("The current scene is the 'next scene'", func() {
+					curr, _ := m.Current()
+					So(curr, ShouldEqual, s)
+				})
+			})
+			Convey("Switching to a non existant scene", func() {
+				s, err := m.Next("404")
+				So(s, ShouldEqual, nil)
+				So(err, ShouldNotBeNil)
+				So(err.Error(), ShouldEqual, "No scene with name '404'")
+			})
+
+		})
 	})
 }
