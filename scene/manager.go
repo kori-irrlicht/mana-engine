@@ -70,7 +70,19 @@ func (d *defaultManager) Next(name Name) (Scene, error) {
 	if !ok {
 		return nil, fmt.Errorf("No scene with name '%s'", name)
 	}
+	curr, err := d.Current()
+	if err != nil {
+		panic("No current scene")
+	}
+	curr.Exit()
+
 	d.current = name
+
+	curr, err = d.Current()
+	if err != nil {
+		panic("No current scene")
+	}
+	curr.Entry()
 	return s, nil
 }
 
