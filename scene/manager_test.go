@@ -12,10 +12,16 @@ type testScene struct {
 	update      bool
 	render      bool
 	renderDelta float32
+	enter       bool
+	exit        bool
 }
 
-func (s *testScene) Entry() {}
-func (s *testScene) Exit()  {}
+func (s *testScene) Entry() {
+	s.enter = true
+}
+func (s *testScene) Exit() {
+	s.exit = true
+}
 func (s *testScene) Input() {
 	s.input = true
 }
@@ -113,6 +119,12 @@ func TestDefaultManager(t *testing.T) {
 				Convey("The current scene is the 'next scene'", func() {
 					curr, _ := m.Current()
 					So(curr, ShouldEqual, s)
+				})
+				Convey("Exit first scene", func() {
+					So(ts.exit, ShouldBeTrue)
+				})
+				Convey("Enter second scene", func() {
+					So(ts.enter, ShouldBeTrue)
 				})
 			})
 			Convey("Switching to a non existant scene", func() {
