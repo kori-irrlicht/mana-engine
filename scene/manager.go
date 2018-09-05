@@ -80,6 +80,7 @@ func (d *defaultManager) Next(name Name) (Scene, error) {
 
 	// Current() only returns an error, if there is no current scene, but
 	// since we set a current scene just now, there can't be an error
+	/* #nosec G104 */
 	curr, _ = d.Current()
 	curr.Entry()
 	return s, nil
@@ -97,6 +98,10 @@ func (d *defaultManager) StartWith(name Name) error {
 		return fmt.Errorf("No scene with name '%s'", name)
 	}
 	d.current = name
+
+	// Current() only returns an error, if there is no current scene, but
+	// since we set a current scene just now, there can't be an error
+	/* #nosec G104 */
 	s, _ := d.Current()
 	s.Entry()
 	return nil
