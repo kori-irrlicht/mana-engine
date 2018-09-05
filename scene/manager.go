@@ -4,7 +4,7 @@ import "fmt"
 
 // Manager contains the scenes of the game
 type Manager interface {
-	Scene
+	Managable
 
 	// Current returns the current scene.
 	// Returns an error if there is no current scene
@@ -24,7 +24,6 @@ type Manager interface {
 }
 
 type defaultManager struct {
-	Loading Scene
 	scenes  map[Name]Scene
 	current Name
 }
@@ -44,21 +43,37 @@ func (d *defaultManager) Current() (Scene, error) {
 	}
 	return nil, fmt.Errorf("No current scene")
 }
-func (d *defaultManager) Entry() {}
-func (d *defaultManager) Exit()  {}
 func (d *defaultManager) Input() {
-	s, _ := d.Current()
+	s, err := d.Current()
+	if err != nil {
+		panic("No current scene")
+	}
 	s.Input()
 }
 func (d *defaultManager) Update() {
-	s, _ := d.Current()
+	s, err := d.Current()
+	if err != nil {
+		panic("No current scene")
+	}
 	s.Update()
 }
 func (d *defaultManager) Render(delta float32) {
-	s, _ := d.Current()
+	s, err := d.Current()
+	if err != nil {
+		panic("No current scene")
+	}
 	s.Render(delta)
 }
-func (d *defaultManager) Next(Name) (Scene, error) { return nil, nil }
+
+func (d *defaultManager) Next(name Name) (Scene, error) {
+	s, ok := d.scenes[name]
+	if !ok {
+		return nil, fmt.Errorf("No scene with name '%s'", name)
+	}
+	d.current = name
+	return s, nil
+}
+
 func (d *defaultManager) Register(name Name, scene Scene) error {
 	if _, ok := d.scenes[name]; ok {
 		return fmt.Errorf("Scene with name '%s' already registered", name)
@@ -66,7 +81,6 @@ func (d *defaultManager) Register(name Name, scene Scene) error {
 	d.scenes[name] = scene
 	return nil
 }
-func (d *defaultManager) Ready() bool { return true }
 func (d *defaultManager) StartWith(name Name) error {
 	if _, ok := d.scenes[name]; !ok {
 		return fmt.Errorf("No scene with name '%s'", name)
