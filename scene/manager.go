@@ -44,15 +44,24 @@ func (d *defaultManager) Current() (Scene, error) {
 	return nil, fmt.Errorf("No current scene")
 }
 func (d *defaultManager) Input() {
-	s, _ := d.Current()
+	s, err := d.Current()
+	if err != nil {
+		panic("No current scene")
+	}
 	s.Input()
 }
 func (d *defaultManager) Update() {
-	s, _ := d.Current()
+	s, err := d.Current()
+	if err != nil {
+		panic("No current scene")
+	}
 	s.Update()
 }
 func (d *defaultManager) Render(delta float32) {
-	s, _ := d.Current()
+	s, err := d.Current()
+	if err != nil {
+		panic("No current scene")
+	}
 	s.Render(delta)
 }
 

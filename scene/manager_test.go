@@ -80,6 +80,15 @@ func TestDefaultManager(t *testing.T) {
 			So(s, ShouldBeNil)
 			So(err, ShouldNotBeNil)
 			So(err.Error(), ShouldEqual, fmt.Errorf("No current scene").Error())
+			Convey("Input should panic", func() {
+				So(m.Input, ShouldPanicWith, "No current scene")
+			})
+			Convey("Update should panic", func() {
+				So(m.Update, ShouldPanicWith, "No current scene")
+			})
+			Convey("Render should panic", func() {
+				So(func() { m.Render(1) }, ShouldPanicWith, "No current scene")
+			})
 		})
 		Convey("Selecting an unknown start scene", func() {
 			err := m.StartWith("name")
